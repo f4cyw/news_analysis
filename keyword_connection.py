@@ -36,12 +36,16 @@ def remove_particles(word):
     # Remove common Korean particles (조사) using regex
     return re.sub(r'(은|는|이|가|을|를|에|의|와|과|도|로|으로|에서|에게|한테|께|까지|만|조차|마저|부터|밖에)$', '', word)
 
+def remove_unwanted_verbs(word):
+    # Remove common Korean auxiliary verbs (e.g., 것, 하다, 되다, etc.)
+    return re.sub(r'(것|하다|되다|이다|있다|없다|같다|되다|보다|싶다|만들다|보다|주다|받다|오다|가다|나다|살다)$', '', word)
+
 def extract_keywords(text, num_keywords=10):
     # Tokenize the text
     tokens = nltk.word_tokenize(text)
-    # Remove stopwords, non-alphabetic tokens, and Korean particles
-    keywords = [remove_particles(word) for word in tokens if word.isalpha() and word not in stop_words]
-    keywords = [word for word in keywords if word]  # Remove empty strings after particle removal
+    # Remove stopwords, non-alphabetic tokens, Korean particles, and auxiliary verbs
+    keywords = [remove_unwanted_verbs(remove_particles(word)) for word in tokens if word.isalpha() and word not in stop_words]
+    keywords = [word for word in keywords if word]  # Remove empty strings after particle and verb removal
     
     # Calculate TF-IDF scores
     vectorizer = CountVectorizer()
@@ -104,4 +108,4 @@ if __name__ == "__main__":
 
 민 전 대표 측은 이 대화 내용을 토대로 "빌리프랩은 표절 의혹이 사실이 아니라고 지속적으로 부인하고 하이브는 이를 방치했다"며, 지난 4월 하이브의 감사가 불법이라고 강조했다.
     """
-    main(articles, additional_keywords=["민희진"])
+    main(articles, additional_keywords=["뉴진스", "표절", "하이브"])
