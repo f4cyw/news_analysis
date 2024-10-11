@@ -136,7 +136,7 @@ def main(article, additional_keywords=None):
         print("No keywords found.")
         return
 
-    model = fasttext.load_model("ko/facebook_ko.bin")
+    model = fasttext.load_model("model/facebook_ko.bin")
     G = build_relationship_graph(model, keywords, additional_keywords)
     visualize_graph(G)
 
